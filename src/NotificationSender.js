@@ -1,14 +1,14 @@
 'use strict'
 
-const each = require('co-eachseries')
-const uuid = require('uuid/v4')
-const clone = require('lodash/clone')
-
 /**
  * adonis-notifications
  * Copyright(c) 2017 Evgeny Razumov
  * MIT Licensed
  */
+
+const each = require('co-eachseries')
+const uuid = require('uuid/v4')
+const clone = require('lodash/clone')
 
 class NotificationSender {
   constructor (manager, emitter) {
@@ -24,10 +24,10 @@ class NotificationSender {
 
   * sendNow (notifiables, notification, channels = []) {
     notifiables = this.formatNotifiables(notifiables)
+
     channels = Array.isArray(channels) ? channels : []
 
     const _this = this
-
     yield each (notifiables, function * (notifiable) {
       const notificationId = uuid()
       const viaChannels = channels.length ? channels : notification.via(notifiable)

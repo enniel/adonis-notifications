@@ -7,63 +7,40 @@
  */
 
 const NE = require('node-exceptions')
-const capitalize = require('lodash/capitalize')
 const NotificationSender = require('./NotificationSender')
 
 class ChannelManager {
   constructor (app) {
     this.app = app
     this.channels = {}
-    this.customCreators = {}
   }
 
-  get defaultDriver () {
-    return 'log'
+  get sender () {
+    return new NotificationSender(this, this.app.use('Adonis/Src/Event'))
   }
 
   extend (channel, callback) {
-    this.customCreators[channel] = callback
+    if (typeof callback !== 'function') {
+      throw new NE.InvalidArgumentException('Argument callback must be function.');
+    }
+    this.channels[channel] = callback
     return this
   }
 
   channel (channel) {
-    channel = channel ? channel : this.defaultChannel
-
     if (!this.channels[channel]) {
-      this.channels[channel] = this.createChannel(channel)
+      throw new NE.InvalidArgumentException(`Channel [${channel}] not supported.`);
     }
 
-    return this.channels[channel]
-  }
-
-  createChannel (channel) {
-    if (this.customCreators[channel]) {
-      return this.callCustomCreator(channel)
-    } else {
-      const method = `create${capitalize(channel)}Channel`;
-      if (typeof this[method] === 'function') {
-        return this[method]()
-      }
-    }
-    throw new NE.InvalidArgumentException(`Channel [${channel}] not supported.`);
-  }
-
-  createDatabaseChannel () {
-    return require('./Channels/DatabaseChannel')
-  }
-
-  createLogChannel () {
-    return require('./Channels/LogChannel')
+    return this.channels[channel](this.app)
   }
 
   * send (notifiables, notification) {
-    const sender = new NotificationSender(this, this.app.use('Adonis/Src/Event'))
-    return yield sender.send(notifiables, notification)
+    return yield this.sender.send(notifiables, notification)
   }
 
   * sendNow (notifiables, notification, channels = []) {
-    const sender = new NotificationSender(this, this.app.use('Adonis/Src/Event'))
-    return yield sender.sendNow(notifiables, notification, channels)
+    return yield this.sender.sendNow(notifiables, notification, channels)
   }
 }
 

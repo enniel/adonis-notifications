@@ -1,28 +1,26 @@
 'use strict'
 
-const NE = require('node-exceptions')
-
 /**
  * adonis-notifications
  * Copyright(c) 2017 Evgeny Razumov
  * MIT Licensed
  */
 
-class DatabaseChannel {
+const NE = require('node-exceptions')
 
-  static * send (notifiable, notification) {
+class DatabaseChannel {
+  * send (notifiable, notification) {
     return yield notifiable.routeNotificationFor('database').create({
       id: notification.id,
       type: notification.constructor.name,
-      data: DatabaseChannel.getData(notifiable, notification),
+      data: this.getData(notifiable, notification),
       read_at: null
     })
   }
 
-  static getData (notifiable, notification) {
+  getData (notifiable, notification) {
     if (typeof notification.toDatabase === 'function') {
-      const data = notification.toDatabase(notifiable)
-      return data ? data : data.data
+      return notification.toDatabase(notifiable)
     }
 
     if (typeof notification.toJSON === 'function') {

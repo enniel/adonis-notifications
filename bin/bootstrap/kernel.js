@@ -43,21 +43,22 @@ module.exports = () => {
   fold.Ioc.bind('Adonis/Src/Config', function () {
     return Config
   })
+  fold.Ioc.on('providers:booted', () => {
+    const Event = fold.Ioc.use('Adonis/Src/Event')
+    Event.when('notification.sent', function () {
+      console.log(...arguments)
+    })
+    co (function * () {
+      const Notification = fold.Ioc.use('Adonis/Notifications/Manager')
+      yield Notification.send(new User(), new TestNotification())
+    })
+    .catch((error) => console.error(error.stack))
+  })
   fold.Registrar
     .register([
       'adonis-ace/providers/CommandProvider',
       'adonis-framework/providers/EventProvider',
       path.join(__dirname, '../../providers/NotificationsProvider')
     ])
-    .then(() => {
-      const Event = fold.Ioc.use('Adonis/Src/Event')
-      Event.when('notification.sent', function () {
-        console.log(...arguments)
-      })
-      co (function * () {
-        const Notification = fold.Ioc.use('Adonis/Notifications/Manager')
-        yield Notification.send(new User(), new TestNotification())
-      })
-    })
     .catch((error) => console.error(error.stack))
 }
