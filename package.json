@@ -1,0 +1,41 @@
+{
+  "name": "adonis-notifications",
+  "version": "0.0.1",
+  "description": "The Adonis Notifications package.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "fix": "standard --fix",
+    "lint": "standard src/**/*.js providers/*.js bin/*.js"
+  },
+  "author": "Evgeny Razumov (enniel)",
+  "license": "MIT",
+  "dependencies": {
+    "co-eachseries": "^1.0.3",
+    "lodash": "^4.17.4",
+    "node-exceptions": "^2.0.1",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "adonis-ace": "^3.0.7",
+    "adonis-fold": "^3.0.3",
+    "adonis-framework": "^3.0.13",
+    "dotenv": "^4.0.0",
+    "standard": "^10.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enniel/adonis-notifications.git"
+  },
+  "keywords": [
+    "asterisk",
+    "ami",
+    "adonis"
+  ],
+  "bugs": {
+    "url": "https://github.com/enniel/adonis-notifications/issues"
+  },
+  "homepage": "https://github.com/enniel/adonis-notifications#readme"
+}
