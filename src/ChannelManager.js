@@ -21,7 +21,7 @@ class ChannelManager {
 
   extend (channel, callback) {
     if (typeof callback !== 'function') {
-      throw new NE.InvalidArgumentException('Argument callback must be function.');
+      throw new NE.InvalidArgumentException('Argument callback must be function.')
     }
     this.channels[channel] = callback
     return this
@@ -29,7 +29,7 @@ class ChannelManager {
 
   channel (channel) {
     if (!this.channels[channel]) {
-      throw new NE.InvalidArgumentException(`Channel [${channel}] not supported.`);
+      throw new NE.InvalidArgumentException(`Channel [${channel}] not supported.`)
     }
 
     return this.channels[channel](this.app)

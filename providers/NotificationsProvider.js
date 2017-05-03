@@ -14,11 +14,14 @@ class NotificationsProvider extends ServiceProvider {
       const ChannelManager = require('../src/ChannelManager')
       return new ChannelManager(app)
     })
+    this.app.bind('Adonis/Notifications/Notifiable', function () {
+      return require('../src/Notifiable')
+    })
   }
 
   * boot () {
-    const Notification = this.app.use('Adonis/Notifications/Manager')
-    Notification.extend('log', function (app) {
+    const NotificationManager = this.app.use('Adonis/Notifications/Manager')
+    NotificationManager.extend('log', function (app) {
       const LogChannel = require('../src/Channels/LogChannel')
       return new LogChannel(app)
     })

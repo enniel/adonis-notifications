@@ -6,8 +6,19 @@
  * MIT Licensed
  */
 
-class Notifiable {
+const capitalize = require('lodash/capitalize')
 
+class Notifiable {
+  * routeNotificationFor (channel) {
+    const method = `routeNotificationFor${capitalize(channel)}`
+    if (typeof this[method] === 'function') {
+      return yield this[method]()
+    }
+    switch (channel) {
+      case 'database':
+        return yield this.notifications().fetch()
+    }
+  }
 }
 
 module.exports = Notifiable

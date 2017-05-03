@@ -7,11 +7,9 @@
 */
 
 const fold = require('adonis-fold')
-const Ace = require('adonis-ace')
 const path = require('path')
 const co = require('co')
 require('dotenv').config({ path: path.join(__dirname, '../../.env') })
-const Env = process.env
 
 const Config = {
   get (key) {
@@ -20,7 +18,6 @@ const Config = {
 }
 
 class TestNotification {
-
   via () {
     return [
       'log'
@@ -48,9 +45,9 @@ module.exports = () => {
     Event.when('notification.sent', function () {
       console.log(...arguments)
     })
-    co (function * () {
-      const Notification = fold.Ioc.use('Adonis/Notifications/Manager')
-      yield Notification.send(new User(), new TestNotification())
+    co(function * () {
+      const NotificationManager = fold.Ioc.use('Adonis/Notifications/Manager')
+      yield NotificationManager.send(new User(), new TestNotification())
     })
     .catch((error) => console.error(error.stack))
   })

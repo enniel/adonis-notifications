@@ -28,11 +28,11 @@ class NotificationSender {
     channels = Array.isArray(channels) ? channels : []
 
     const _this = this
-    yield each (notifiables, function * (notifiable) {
+    yield each(notifiables, function * (notifiable) {
       const notificationId = uuid()
       const viaChannels = channels.length ? channels : notification.via(notifiable)
 
-      yield each (viaChannels, function * (channel) {
+      yield each(viaChannels, function * (channel) {
         yield _this.sendToNotifiable(notifiable, notificationId, clone(notification), channel)
       })
     })

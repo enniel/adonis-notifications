@@ -8,7 +8,7 @@
   },
   "scripts": {
     "fix": "standard --fix",
-    "lint": "standard src/**/*.js providers/*.js bin/*.js"
+    "lint": "standard"
   },
   "author": "Evgeny Razumov (enniel)",
   "license": "MIT",
