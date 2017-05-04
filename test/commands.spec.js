@@ -19,7 +19,10 @@ require('co-mocha')
 describe('Commands', function () {
   before(function * () {
     yield setup.loadProviders()
+    // create folders
     yield setup.createStorageDir()
+    yield setup.createMigrationsDir()
+    yield setup.createModelDir()
 
     setup.registerCommands()
 
@@ -33,9 +36,10 @@ describe('Commands', function () {
   })
 
   after(function * () {
-    yield setup.cleanStorageDir()
-    yield fs.remove(path.join(__dirname, './Model'))
-    yield fs.emptyDir(path.join(__dirname, './database/migrations'))
+    // remove folders
+    yield setup.removeStorageDir()
+    yield setup.removeMigrationsDir()
+    yield setup.removeModelDir()
   })
 
   it('should create the notifications table using migrations', function * () {

@@ -129,10 +129,26 @@ setup.invokeCommand = (command, args = [], options = {}) => {
   return Ace.call(command, args, options)
 }
 
-setup.cleanStorageDir = function * () {
-  return yield fs.emptyDir(path.join(__dirname, './storage'))
+setup.removeStorageDir = function * () {
+  return yield fs.remove(path.join(__dirname, './storage'))
+}
+
+setup.removeMigrationsDir = function * () {
+  return yield fs.remove(path.join(__dirname, './database/migrations'))
+}
+
+setup.removeModelDir = function * () {
+  return yield fs.remove(path.join(__dirname, './Model'))
 }
 
 setup.createStorageDir = function * () {
   return yield fs.ensureDir(path.join(__dirname, './storage'))
+}
+
+setup.createMigrationsDir = function * () {
+  return yield fs.ensureDir(path.join(__dirname, './database/migrations'))
+}
+
+setup.createModelDir = function * () {
+  return yield fs.ensureDir(path.join(__dirname, './Model'))
 }
