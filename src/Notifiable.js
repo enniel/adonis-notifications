@@ -16,7 +16,7 @@ class Notifiable {
     }
     switch (channel) {
       case 'database':
-        return yield this.notifications().fetch()
+        return this.notifications()
     }
   }
 }

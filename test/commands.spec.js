@@ -7,32 +7,29 @@
  */
 
 /* global describe, it, after, before */
-const chai = require('chai')
-const expect = chai.expect
+const expect = require('chai').expect
 const fold = require('adonis-fold')
-const Ioc = fold.Ioc
 const setup = require('./setup')
-const path = require('path')
-const fs = require('co-fs-extra')
 require('co-mocha')
 
 describe('Commands', function () {
   before(function * () {
     yield setup.loadProviders()
+
+    setup.registerCommands()
+
+    const Lucid = fold.Ioc.use('Adonis/Src/Lucid')
+    class User extends Lucid {}
+    fold.Ioc.bind('App/Model/User', function () {
+      return User
+    })
+
     // create folders
     yield setup.createStorageDir()
     yield setup.createMigrationsDir()
     yield setup.createModelDir()
 
-    setup.registerCommands()
-
-    const Lucid = Ioc.use('Adonis/Src/Lucid')
-    class User extends Lucid {}
-    Ioc.bind('App/Model/User', function () {
-      return User
-    })
-
-    this.database = Ioc.use('Adonis/Src/Database')
+    this.database = fold.Ioc.use('Adonis/Src/Database')
   })
 
   after(function * () {

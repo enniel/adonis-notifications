@@ -6,6 +6,7 @@
  * MIT Licensed
  */
 
+const Ace = require('adonis-ace')
 const Ioc = require('adonis-fold').Ioc
 const path = require('path')
 const Command = Ioc.use('Adonis/Src/Command')
@@ -20,10 +21,10 @@ class Setup extends Command {
   }
 
   * handle () {
-    this.run('make:migration', 'create_notifications_table', {
+    yield Ace.call('make:migration', ['create_notifications_table'], {
       template: path.join(__dirname, './templates/notifications_schema.mustache')
     })
-    this.run('make:model', 'Notification', {
+    yield Ace.call('make:model', ['Notification'], {
       template: path.join(__dirname, './templates/notification_model.mustache')
     })
   }

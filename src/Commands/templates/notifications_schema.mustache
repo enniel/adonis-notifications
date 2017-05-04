@@ -5,11 +5,11 @@ const Schema = use('Schema')
 class NotificationsTableSchema extends Schema {
 
   up () {
-    this.create('notifications', table => {
-      table.uuid('id').primary()
+    this.createIfNotExists('notifications', table => {
+      table.uuid('id')
       table.string('type')
-      table.unsigned('notifiable_id')
-      table.string('notifiable_type')
+      table.integer('notifiable_id').unsigned().nullable()
+      table.string('notifiable_type').nullable()
       table.text('data')
       table.timestamp('read_at').nullable()
       table.timestamps()
@@ -17,7 +17,7 @@ class NotificationsTableSchema extends Schema {
   }
 
   down () {
-    this.drop('notifications')
+    this.dropIfExists('notifications')
   }
 
 }

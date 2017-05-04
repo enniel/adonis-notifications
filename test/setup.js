@@ -39,7 +39,7 @@ const Config = {
         client: 'mysql',
         connection: {
           host: Env.DB_HOST || 'localhost',
-          port: Env.DB_PORT || '',
+          port: Env.DB_PORT || 3306,
           user: Env.DB_USER || 'root',
           password: Env.DB_PASSWORD || '',
           database: Env.DB_DATABASE || 'adonis'
@@ -50,7 +50,7 @@ const Config = {
         client: 'pg',
         connection: {
           host: Env.DB_HOST || 'localhost',
-          port: Env.DB_PORT || '',
+          port: Env.DB_PORT || 5432,
           user: Env.DB_USER || 'root',
           password: Env.DB_PASSWORD || '',
           database: Env.DB_DATABASE || 'adonis'
@@ -67,13 +67,13 @@ const Helpers = {
   basePath () {
     return __dirname
   },
-  migrationsPath (file) {
+  migrationsPath (file = '') {
     return path.join(__dirname, './database/migrations', file)
   },
   seedsPath () {
     return path.join(__dirname, './database/seeds')
   },
-  databasePath (file) {
+  databasePath (file = '') {
     return path.join(__dirname, './database', file)
   }
 }
@@ -99,21 +99,22 @@ const providers = [
   path.join(__dirname, '../providers/CommandsProvider')
 ]
 
+const aliases = {
+  Lucid: 'Adonis/Src/Lucid',
+  Schema: 'Adonis/Src/Schema'
+}
+
 const setup = exports = module.exports = {}
 
-setup.loadProviders = function () {
+setup.loadProviders = function * () {
   Ioc.bind('Adonis/Src/Helpers', function () {
     return Helpers
   })
-
   Ioc.bind('Adonis/Src/Config', function () {
     return Config
   })
-  return Registrar.register(providers)
-}
-
-setup.start = function * () {
-  yield filesFixtures.createDir()
+  yield Registrar.register(providers)
+  Ioc.aliases(aliases)
 }
 
 setup.registerCommands = function () {
@@ -130,25 +131,25 @@ setup.invokeCommand = (command, args = [], options = {}) => {
 }
 
 setup.removeStorageDir = function * () {
-  return yield fs.remove(path.join(__dirname, './storage'))
+  yield fs.remove(path.join(__dirname, './storage'))
 }
 
 setup.removeMigrationsDir = function * () {
-  return yield fs.remove(path.join(__dirname, './database/migrations'))
+  yield fs.remove(path.join(__dirname, './database/migrations'))
 }
 
 setup.removeModelDir = function * () {
-  return yield fs.remove(path.join(__dirname, './Model'))
+  yield fs.remove(path.join(__dirname, './Model'))
 }
 
 setup.createStorageDir = function * () {
-  return yield fs.ensureDir(path.join(__dirname, './storage'))
+  yield fs.ensureDir(path.join(__dirname, './storage'))
 }
 
 setup.createMigrationsDir = function * () {
-  return yield fs.ensureDir(path.join(__dirname, './database/migrations'))
+  yield fs.ensureDir(path.join(__dirname, './database/migrations'))
 }
 
 setup.createModelDir = function * () {
-  return yield fs.ensureDir(path.join(__dirname, './Model'))
+  yield fs.ensureDir(path.join(__dirname, './Model'))
 }
