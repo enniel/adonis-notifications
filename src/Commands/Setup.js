@@ -21,10 +21,10 @@ class Setup extends Command {
 
   * handle () {
     this.run('make:migration', 'create_notifications_table', {
-      template: path.join(__dirname, './templates/notificationsSchema.mustache')
+      template: path.join(__dirname, './templates/notifications_schema.mustache')
     })
     this.run('make:model', 'Notification', {
-      template: path.join(__dirname, './templates/notificationModel.mustache')
+      template: path.join(__dirname, './templates/notification_model.mustache')
     })
   }
 }

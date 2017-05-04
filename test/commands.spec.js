@@ -12,6 +12,8 @@ const expect = chai.expect
 const fold = require('adonis-fold')
 const Ioc = fold.Ioc
 const setup = require('./setup')
+const path = require('path')
+const fs = require('co-fs-extra')
 require('co-mocha')
 
 describe('Commands', function () {
@@ -32,6 +34,8 @@ describe('Commands', function () {
 
   after(function * () {
     yield setup.cleanStorageDir()
+    yield fs.remove(path.join(__dirname, './Model'))
+    yield fs.emptyDir(path.join(__dirname, './database/migrations'))
   })
 
   it('should create the notifications table using migrations', function * () {

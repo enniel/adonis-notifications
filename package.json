@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "_mocha test",
+    "test": "mocha test",
     "fix": "standard --fix",
     "lint": "standard"
   },
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "adonis-ace": "^3.0.7",
+    "adonis-commands": "^2.1.5",
     "adonis-fold": "^3.0.3",
     "adonis-framework": "^3.0.13",
     "adonis-lucid": "^3.0.15",
@@ -28,6 +29,8 @@
     "co-fs-extra": "^1.2.1",
     "co-mocha": "^1.2.0",
     "dotenv": "^4.0.0",
+    "mocha": "^3.3.0",
+    "pg": "^6.1.5",
     "sqlite3": "^3.1.8",
     "standard": "^10.0.2"
   },

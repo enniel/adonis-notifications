@@ -13,6 +13,8 @@ const Registrar = fold.Registrar
 const path = require('path')
 const get = require('lodash/get')
 const fs = require('co-fs-extra')
+require('dotenv').config({ path: path.join(__dirname, '../.env') })
+const Env = process.env
 
 const Config = {
   get (key) {
@@ -21,21 +23,52 @@ const Config = {
 
   get database () {
     return {
-      connection: 'default',
-      default: {
+      migrationsTable: 'migrations',
+
+      connection: Env.DB_CONNECTION || 'sqlite',
+
+      sqlite: {
         client: 'sqlite3',
         connection: {
-          filename: path.join(__dirname, './storage/test.sqlite3')
+          filename: path.join(__dirname, './storage/test.sqlite')
         },
         useNullAsDefault: true
+      },
+
+      mysql: {
+        client: 'mysql',
+        connection: {
+          host: Env.DB_HOST || 'localhost',
+          port: Env.DB_PORT || '',
+          user: Env.DB_USER || 'root',
+          password: Env.DB_PASSWORD || '',
+          database: Env.DB_DATABASE || 'adonis'
+        }
+      },
+
+      pg: {
+        client: 'pg',
+        connection: {
+          host: Env.DB_HOST || 'localhost',
+          port: Env.DB_PORT || '',
+          user: Env.DB_USER || 'root',
+          password: Env.DB_PASSWORD || '',
+          database: Env.DB_DATABASE || 'adonis'
+        }
       }
     }
   }
 }
 
 const Helpers = {
-  migrationsPath () {
-    return path.join(__dirname, './database/migrations')
+  appPath () {
+    return __dirname
+  },
+  basePath () {
+    return __dirname
+  },
+  migrationsPath (file) {
+    return path.join(__dirname, './database/migrations', file)
   },
   seedsPath () {
     return path.join(__dirname, './database/seeds')
@@ -46,6 +79,8 @@ const Helpers = {
 }
 
 const commands = [
+  'Adonis/Commands/Make:Migration',
+  'Adonis/Commands/Make:Model',
   'Adonis/Commands/Migration:Run',
   'Adonis/Commands/Notifications:Setup'
 ]
@@ -59,6 +94,7 @@ const providers = [
   'adonis-lucid/providers/CommandsProvider',
   'adonis-lucid/providers/FactoryProvider',
   'adonis-lucid/providers/SeederProvider',
+  'adonis-commands/providers/GeneratorsProvider',
   path.join(__dirname, '../providers/NotificationsProvider'),
   path.join(__dirname, '../providers/CommandsProvider')
 ]
@@ -82,17 +118,6 @@ setup.start = function * () {
 
 setup.registerCommands = function () {
   Ace.register(commands)
-}
-
-setup.end = function * () {
-}
-
-setup.migrate = function * (schemas, direction) {
-  const Migrations = Ioc.use('Adonis/Src/Migrations')
-  yield new Migrations()[direction](schemas)
-  if (direction === 'down') {
-    yield new Migrations().database.schema.dropTable('adonis_migrations')
-  }
 }
 
 setup.seed = function (seeds) {
