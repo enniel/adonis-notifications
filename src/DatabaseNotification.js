@@ -1,5 +1,11 @@
 'use strict'
 
+/**
+ * adonis-notifications
+ * Copyright(c) 2017 Evgeny Razumov
+ * MIT Licensed
+ */
+
 const use = require('adonis-fold').Ioc.use
 const Lucid = use('Adonis/Src/Lucid')
 
