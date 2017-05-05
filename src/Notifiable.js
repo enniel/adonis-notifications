@@ -6,17 +6,24 @@
  * MIT Licensed
  */
 
+const use = require('adonis-fold').Ioc.use
 const capitalize = require('lodash/capitalize')
 
 class Notifiable {
-  * routeNotificationFor (channel) {
-    const method = `routeNotificationFor${capitalize(channel)}`
-    if (typeof this[method] === 'function') {
-      return yield this[method]()
+  static register (Model) {
+    Model.prototype.notify = function * (instance) {
+      return yield use('Adonis/Notifications/Manager').send(this, instance)
     }
-    switch (channel) {
-      case 'database':
-        return this.notifications()
+
+    Model.prototype.routeNotificationFor = function routeNotificationFor (channel) {
+      const method = `routeNotificationFor${capitalize(channel)}`
+      if (typeof this[method] === 'function') {
+        return this[method]()
+      }
+      switch (channel) {
+        case 'database':
+          return this.notifications()
+      }
     }
   }
 }

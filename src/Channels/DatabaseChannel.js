@@ -12,7 +12,7 @@ class DatabaseChannel {
   * send (notifiable, notification) {
     return yield notifiable.routeNotificationFor('database').create({
       id: notification.id,
-      type: notification.constructor.name,
+      type: notification.constructor.type || notification.constructor.name,
       data: this.getData(notifiable, notification)
     })
   }

@@ -1,9 +1,9 @@
 'use strict'
 
-const Lucid = use('Lucid')
+const use = require('adonis-fold').Ioc.use
+const Lucid = use('Adonis/Src/Lucid')
 
-class Notification extends Lucid {
-
+class DatabaseNotification extends Lucid {
   static get table () {
     return 'notifications'
   }
@@ -33,4 +33,4 @@ class Notification extends Lucid {
   }
 }
 
-module.exports = Notification
+module.exports = DatabaseNotification

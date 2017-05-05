@@ -17,13 +17,23 @@ class NotificationsProvider extends ServiceProvider {
     this.app.bind('Adonis/Notifications/Notifiable', function () {
       return require('../src/Notifiable')
     })
+    this.app.bind('Adonis/Notifications/HasDatabaseNotifications', function () {
+      return require('../src/HasDatabaseNotifications')
+    })
+    this.app.bind('Adonis/Notifications/DatabaseNotification', function () {
+      return require('../src/DatabaseNotification')
+    })
+    // MorpthTrait
+    this.app.bind('Adonis/Lucid/MorphTrait', function () {
+      return require('../src/Relations/MorphTrait')
+    })
   }
 
   * boot () {
     const NotificationManager = this.app.use('Adonis/Notifications/Manager')
-    NotificationManager.extend('database', function (app) {
+    NotificationManager.extend('database', function () {
       const DatabaseChannel = require('../src/Channels/DatabaseChannel')
-      return new DatabaseChannel(app)
+      return new DatabaseChannel()
     })
   }
 }

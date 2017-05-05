@@ -17,15 +17,12 @@ class Setup extends Command {
   }
 
   get description () {
-    return 'Setup migrations and models for notifications'
+    return 'Setup migration for notifications'
   }
 
   * handle () {
     yield Ace.call('make:migration', ['create_notifications_table'], {
       template: path.join(__dirname, './templates/notifications_schema.mustache')
-    })
-    yield Ace.call('make:model', ['Notification'], {
-      template: path.join(__dirname, './templates/notification_model.mustache')
     })
   }
 }

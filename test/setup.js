@@ -23,7 +23,7 @@ const Config = {
 
   get database () {
     return {
-      migrationsTable: 'migrations',
+      migrationsTable: 'adonis_migrations',
 
       connection: Env.DB_CONNECTION || 'sqlite',
 
@@ -87,6 +87,7 @@ const commands = [
 
 const providers = [
   'adonis-ace/providers/CommandProvider',
+  'adonis-framework/providers/EventProvider',
   'adonis-lucid/providers/DatabaseProvider',
   'adonis-lucid/providers/LucidProvider',
   'adonis-lucid/providers/SchemaProvider',
@@ -121,6 +122,14 @@ setup.registerCommands = function () {
   Ace.register(commands)
 }
 
+setup.migrate = function * (schemas, direction) {
+  const Migrations = Ioc.use('Adonis/Src/Migrations')
+  yield new Migrations()[direction](schemas)
+  if (direction === 'down') {
+    yield new Migrations().database.schema.dropTable('adonis_migrations')
+  }
+}
+
 setup.seed = function (seeds) {
   const Seeder = Ioc.use('Adonis/Src/Seeder')
   return Seeder.exec(seeds)
@@ -138,18 +147,10 @@ setup.removeMigrationsDir = function * () {
   yield fs.remove(path.join(__dirname, './database/migrations'))
 }
 
-setup.removeModelDir = function * () {
-  yield fs.remove(path.join(__dirname, './Model'))
-}
-
 setup.createStorageDir = function * () {
   yield fs.ensureDir(path.join(__dirname, './storage'))
 }
 
 setup.createMigrationsDir = function * () {
   yield fs.ensureDir(path.join(__dirname, './database/migrations'))
-}
-
-setup.createModelDir = function * () {
-  yield fs.ensureDir(path.join(__dirname, './Model'))
 }

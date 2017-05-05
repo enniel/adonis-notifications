@@ -6,9 +6,12 @@
  * MIT Licensed
  */
 
-const each = require('co-eachseries')
+const series = require('co-series')
 const uuid = require('uuid/v4')
 const clone = require('lodash/clone')
+const each = require('lodash/each')
+const isArray = require('lodash/isArray')
+const util = require('adonis-lucid/lib/util')
 
 class NotificationSender {
   constructor (manager, emitter) {
@@ -19,7 +22,7 @@ class NotificationSender {
   * send (notifiables, notification) {
     notifiables = this.formatNotifiables(notifiables)
 
-    return yield this.sendNow(notifiables, notification)
+    yield this.sendNow(notifiables, notification)
   }
 
   * sendNow (notifiables, notification, channels = []) {
@@ -28,14 +31,14 @@ class NotificationSender {
     channels = Array.isArray(channels) ? channels : []
 
     const _this = this
-    yield each(notifiables, function * (notifiable) {
+    yield notifiables.each(series(function * (notifiable) {
       const notificationId = uuid()
       const viaChannels = channels.length ? channels : notification.via(notifiable)
 
-      yield each(viaChannels, function * (channel) {
+      yield each(viaChannels, series(function * (channel) {
         yield _this.sendToNotifiable(notifiable, notificationId, clone(notification), channel)
-      })
-    })
+      }))
+    }))
   }
 
   * sendToNotifiable (notifiable, id, notification, channel) {
@@ -49,10 +52,11 @@ class NotificationSender {
   }
 
   formatNotifiables (notifiables) {
-    if (!Array.isArray(notifiables)) {
-      return [
-        notifiables
-      ]
+    if (!(notifiables instanceof util.lodash())) {
+      if (!isArray(notifiables)) {
+        notifiables = [notifiables]
+      }
+      return util.toCollection(notifiables)
     }
     return notifiables
   }
