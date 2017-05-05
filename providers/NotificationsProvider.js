@@ -23,10 +23,6 @@ class NotificationsProvider extends ServiceProvider {
     this.app.bind('Adonis/Notifications/DatabaseNotification', function () {
       return require('../src/DatabaseNotification')
     })
-    // MorpthTrait
-    this.app.bind('Adonis/Lucid/MorphTrait', function () {
-      return require('../src/Relations/MorphTrait')
-    })
   }
 
   * boot () {
