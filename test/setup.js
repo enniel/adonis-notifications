@@ -96,7 +96,7 @@ const providers = [
   'adonis-lucid/providers/FactoryProvider',
   'adonis-lucid/providers/SeederProvider',
   'adonis-commands/providers/GeneratorsProvider',
-  'adonis-lucid-morphs/providers/MorphsProvider',
+  'adonis-lucid-polymorphic/providers/PolymorphicProvider',
   path.join(__dirname, '../providers/NotificationsProvider'),
   path.join(__dirname, '../providers/CommandsProvider')
 ]

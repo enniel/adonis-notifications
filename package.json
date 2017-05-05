@@ -14,7 +14,7 @@
   "author": "Evgeny Razumov (enniel)",
   "license": "MIT",
   "dependencies": {
-    "adonis-lucid-morphs": "git+https://enniel:esavid66@github.com/enniel/adonis-lucid-morphs.git#05785f1ca8d5bb932a6339ac465f309c85f3fe1b",
+    "adonis-lucid-polymorphic": "git+https://enniel:esavid66@github.com/enniel/adonis-lucid-polymorphic.git#a00a329ae8321aa9284b41a990e9e6248a6d5003",
     "co-eachseries": "^1.0.3",
     "co-series": "^3.0.2",
     "lodash": "^4.17.4",
