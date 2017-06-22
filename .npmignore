@@ -11,3 +11,4 @@ package-lock.json
 test/unit/storage
 .travis.yaml
 .coveralls.yml
+coverage
