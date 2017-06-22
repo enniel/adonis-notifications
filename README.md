@@ -1,6 +1,7 @@
 # Adonis Notifications (WORK IN PROGRESS)
 
 [![Build Status](https://travis-ci.org/enniel/adonis-notifications.svg?branch=master)](https://travis-ci.org/enniel/adonis-notifications)
+[![Coverage Status](https://coveralls.io/repos/github/enniel/adonis-notifications/badge.svg?branch=master)](https://coveralls.io/github/enniel/adonis-notifications?branch=master)
 
 ## Installation
 
