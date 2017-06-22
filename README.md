@@ -1,5 +1,7 @@
 # Adonis Notifications (WORK IN PROGRESS)
 
+[![Build Status](https://travis-ci.org/enniel/adonis-notifications.svg?branch=master)](https://travis-ci.org/enniel/adonis-notifications)
+
 ## Installation
 
 1. Add package:
