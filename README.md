@@ -1,4 +1,4 @@
-# Adonis Notifications (WORK IN PROGRESS)
+# Adonis Notifications
 
 [![Build Status](https://travis-ci.org/enniel/adonis-notifications.svg?branch=master)](https://travis-ci.org/enniel/adonis-notifications)
 [![Coverage Status](https://coveralls.io/repos/github/enniel/adonis-notifications/badge.svg?branch=master)](https://coveralls.io/github/enniel/adonis-notifications?branch=master)
@@ -34,17 +34,7 @@ const aceProviders = [
 ]
 ```
 
-3. Register commnads
-
-```js
-const commands = [
-  ...
-  'Adonis/Commands/Notifications:Setup'
-  ...
-]
-```
-
-4. Notifications table
+3. Notifications table
 
 ```sh
 ./ace run notifications:setup
@@ -59,9 +49,9 @@ const commands = [
 class User extends Lucid {
   static get traits () {
     return [
-      'Adonis/Lucid/MorphTrait',
-      'Adonis/Notifications/HasDatabaseNotifications',
-      'Adonis/Notifications/Notifiable'
+      '@provider:Morphable',
+      '@provider:HasDatabaseNotifications',
+      '@provider:Notifiable'
     ]
   }
 }
@@ -96,16 +86,22 @@ class TestNotification {
 ```js
 // app/Http/routes.js
 
-const Notification = use('Adonis/Notifications/Manager')
+const Notifications = use('Notifications')
 
-Route.post('test', function * (request, response) {
+...
+
+  // from model instance
+  const user = await User.find(1)
+  await user.notify(user, new TestNotification())
   // to one user
-  const user = request.auth.user
-  yield user.notify(user, new TestNotification())
+  const user = await User.find(1)
+  await Notifications.send(user, new TestNotification())
   // to many users
-  const users = yield User.query().fetch()
-  yield Notification.send(users, new TestNotification())
-})
+  const users = await User.query().fetch()
+  await Notifications.send(users, new TestNotification())
+
+...
+
 ```
 
 ## Custom Channels
@@ -115,10 +111,9 @@ Route.post('test', function * (request, response) {
 
 ...
 
-* boot () {
-  const NotificationManager = this.app.use('Adonis/Notifications/Manager')
-  NotificationManager.extend('custom', function (app) {
-    const CustomChannel = app.use('App/Channels/CustomChannel')
+boot () {
+  const NotificationManager = this.app.use('Notifications')
+  NotificationManager.extend('custom', () => {
     return new CustomChannel()
   })
 }

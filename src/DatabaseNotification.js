@@ -1,59 +1,106 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
+const { ioc } = require('@adonisjs/fold')
+const Model = ioc.use('Model')
+const _ = require('lodash')
 
-const use = require('adonis-fold').Ioc.use
-const Lucid = use('Adonis/Src/Lucid')
+const formatHook = (instance) => {
+  if (typeof instance.format === 'function') {
+    instance.$attributes = instance.format(instance.$attributes)
+    instance.$originalAttributes = instance.format(instance.$originalAttributes)
+  }
+}
 
-class DatabaseNotification extends Lucid {
+const parseHook = (instance) => {
+  if (typeof instance.parse === 'function') {
+    instance.$attributes = instance.parse(instance.$attributes)
+    instance.$originalAttributes = instance.parse(instance.$originalAttributes)
+  }
+}
+
+const parseEvents = [
+  'beforeCreate',
+  'beforeUpdate',
+  'beforeSave'
+]
+
+const formatEvents = [
+  'afterCreate',
+  'afterUpdate',
+  'afterSave',
+  'afterFind'
+]
+
+class DatabaseNotification extends Model {
   static get table () {
     return 'notifications'
-  }
-
-  getTimestampKey (fieldName) {
-    super.getTimestampKey(fieldName)
-    if (fieldName === this.constructor.readTimestamp) {
-      return 'readTimestamp'
-    }
   }
 
   static get incrementing () {
     return false
   }
 
-  static get readTimestamp () {
-    return 'read_at'
+  static get dates () {
+    return [
+      'read_at',
+      'created_at',
+      'updated_at'
+    ]
   }
 
-  getReadTimestamp (date) {
-    return this.formatDate(date)
+  parse (attrs) {
+    return _.mapValues(attrs, (value, key) => {
+      if (key === 'data' && typeof value === 'object') {
+        return JSON.stringify(value)
+      }
+      return value
+    })
   }
 
-  * markAsRead () {
-    if (!this[this.constructor.readTimestamp]) {
-      this[this.constructor.readTimestamp] = this.formatDate(Date.now())
-      yield this.save()
-    }
+  format (attrs) {
+    return _.mapValues(attrs, (value, key) => {
+      if (key === 'data' && typeof value === 'string') {
+        return JSON.parse(value)
+      }
+      return value
+    })
   }
 
-  setData (data) {
-    return JSON.stringify(data)
+  static boot () {
+    super.boot()
+
+    formatEvents.forEach(eventName => {
+      this.addHook(eventName, formatHook)
+    })
+
+    parseEvents.forEach(eventName => {
+      this.addHook(eventName, parseHook)
+    })
+
+    this.addHook('afterFetch', (instances) => {
+      for (let instance of instances) {
+        formatHook(instance)
+      }
+    })
+
+    this.addHook('afterPaginate', (instances) => {
+      for (let instance of instances) {
+        formatHook(instance)
+      }
+    })
   }
 
-  getData (data) {
-    return JSON.parse(data)
+  markAsRead () {
+    this['read_at'] = Date.now()
+    return this.save()
   }
 
   read () {
-    return this[this.constructor.readTimestamp] !== null
+    return this['read_at'] !== null
   }
 
   unread () {
-    return this[this.constructor.readTimestamp] === null
+    return this['read_at'] === null
   }
 }
 

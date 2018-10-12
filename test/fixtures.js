@@ -1,16 +1,7 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
-const bluebird = require('bluebird')
-const files = require('./files')
-
 module.exports = {
-  setupTables: function (knex) {
+  setupTables (knex) {
     const tables = [
       knex.schema.createTable('users', function (table) {
         table.increments()
@@ -24,31 +15,30 @@ module.exports = {
         table.string('type')
         table.integer('notifiable_id').unsigned().nullable()
         table.string('notifiable_type').nullable()
-        table.text('data')
+        table.jsonb('data')
         table.timestamp('read_at').nullable()
         table.timestamps()
       })
     ]
-    return bluebird.all(tables)
+    return Promise.all(tables)
   },
-  dropTables: function (knex) {
+  dropTables (knex) {
     const tables = [
       knex.schema.dropTable('users'),
       knex.schema.dropTable('notifications')
     ]
-    return bluebird.all(tables)
+    return Promise.all(tables)
   },
-  createRecords: function * (knex, table, values) {
-    return yield knex.table(table).insert(values).returning('id')
+  createRecords (knex, table, values) {
+    return knex.table(table).insert(values).returning('id')
   },
-  truncate: function * (knex, table) {
-    yield knex.table(table).truncate()
+  truncate (knex, table) {
+    return knex.table(table).truncate()
   },
-  up: function * (knex) {
-    yield files.createDir()
-    yield this.setupTables(knex)
+  up (knex) {
+    return this.setupTables(knex)
   },
-  down: function * (knex) {
-    yield this.dropTables(knex)
+  down (knex) {
+    return this.dropTables(knex)
   }
 }

@@ -10,7 +10,7 @@ class NotificationsTableSchema extends Schema {
       table.string('type')
       table.integer('notifiable_id').unsigned().nullable()
       table.string('notifiable_type').nullable()
-      table.text('data')
+      table.jsonb('data')
       table.timestamp('read_at').nullable()
       table.timestamps()
     })

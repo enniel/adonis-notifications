@@ -1,19 +1,13 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
 class HasDatabaseNotifications {
-  static register (Model) {
+  register (Model) {
     /**
      * Get the entity's notifications.
      */
     Model.prototype.notifications = function () {
       return this
-        .morphMany('Adonis/Notifications/DatabaseNotification', 'notifiable')
+        .morphMany('DatabaseNotification', 'id', 'notifiable_id', 'notifiable_type')
         .orderBy('created_at', 'desc')
     }
 

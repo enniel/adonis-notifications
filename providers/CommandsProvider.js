@@ -1,19 +1,17 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
-const ServiceProvider = require('adonis-fold').ServiceProvider
+const ace = require('@adonisjs/ace')
+const { ServiceProvider } = require('@adonisjs/fold')
 
 class CommandsProvider extends ServiceProvider {
-  * register () {
-    this.app.bind('Adonis/Commands/Notifications:Setup', function () {
-      const Setup = require('../src/Commands/Setup')
-      return new Setup()
+  register () {
+    this.app.bind('Adonis/Commands/Notifications:Setup', () => {
+      return require('../src/Commands/Setup')
     })
+  }
+
+  boot () {
+    ace.addCommand('Adonis/Commands/Notifications:Setup')
   }
 }
 

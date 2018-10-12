@@ -1,11 +1,5 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
 const NE = require('node-exceptions')
 const NotificationSender = require('./NotificationSender')
 
@@ -16,7 +10,7 @@ class ChannelManager {
   }
 
   get sender () {
-    return new NotificationSender(this, this.app.use('Adonis/Src/Event'))
+    return new NotificationSender(this, this.app.use('Event'))
   }
 
   extend (channel, callback) {
@@ -35,12 +29,12 @@ class ChannelManager {
     return this.channels[channel](this.app)
   }
 
-  * send (notifiables, notification) {
-    return yield this.sender.send(notifiables, notification)
+  send (notifiables, notification) {
+    return this.sender.send(notifiables, notification)
   }
 
-  * sendNow (notifiables, notification, channels = []) {
-    return yield this.sender.sendNow(notifiables, notification, channels)
+  sendNow (notifiables, notification, channels = []) {
+    return this.sender.sendNow(notifiables, notification, channels)
   }
 }
 

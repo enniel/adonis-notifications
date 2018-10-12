@@ -1,11 +1,5 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
 const _ = require('lodash')
 const NE = require('node-exceptions')
 
@@ -19,7 +13,7 @@ class DatabaseMessage {
   }
 
   set data (data) {
-    if (!_.isArray(data) && !_.isObject(data)) {
+    if (!Array.isArray(data) && !_.isObject(data)) {
       throw new NE.InvalidArgumentException('Argument data must me object or array.')
     }
     this._data = data

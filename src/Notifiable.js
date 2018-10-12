@@ -1,18 +1,12 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
-const use = require('adonis-fold').Ioc.use
+const { ioc } = require('@adonisjs/fold')
 const capitalize = require('lodash/capitalize')
 
 class Notifiable {
-  static register (Model) {
-    Model.prototype.notify = function * (instance) {
-      return yield use('Adonis/Notifications/Manager').send(this, instance)
+  register (Model) {
+    Model.prototype.notify = function (instance) {
+      return ioc.use('Notifications').send(this, instance)
     }
 
     Model.prototype.routeNotificationFor = function (channel) {

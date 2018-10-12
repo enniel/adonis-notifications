@@ -1,19 +1,14 @@
 'use strict'
 
-/**
- * adonis-notifications
- * Copyright(c) 2017 Evgeny Razumov
- * MIT Licensed
- */
-
 const NE = require('node-exceptions')
 
 class DatabaseChannel {
-  * send (notifiable, notification) {
-    return yield notifiable.routeNotificationFor('database').create({
+  async send (notifiable, notification) {
+    const data = await this.getData(notifiable, notification)
+    return notifiable.routeNotificationFor('database').create({
       id: notification.id,
       type: notification.constructor.type || notification.constructor.name,
-      data: this.getData(notifiable, notification)
+      data
     })
   }
 
