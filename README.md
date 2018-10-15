@@ -16,7 +16,7 @@ or
 $ yarn add adonis-notifications
 ```
 
-2. Register providers inside the your bootstrap/app.js file.
+2. Register providers inside the your start/app.js file.
 
 ```js
 const providers = [
@@ -120,6 +120,92 @@ boot () {
 
 ...
 ```
+
+## On-Demand Notifications
+
+```js
+const FcmMessage = use('FcmMessage')
+const Notifications = use('Notifications')
+
+class PushTestNotification {
+  constructor (animal) {
+    this.animal = animal
+  }
+
+  static get type () {
+    return 'pushtest'
+  }
+
+  via () {
+    return ['fcm']
+  }
+
+  toFcm () {
+    const message = new FcmMessage()
+    switch (this.animal) {
+      case 'cat':
+        message.addNotification('title', 'Cat')
+        message.addNotification('body', 'Meow!')
+        message.addNotification('icon', 'cat_black')
+        message.addNotification('color', '#ffab00')
+        message.addNotification('sound', 'default')
+        message.addData('animal', 'cat')
+        break
+
+      case 'cow':
+        message.addNotification('title', 'Cow')
+        message.addNotification('body', 'Moo!')
+        message.addNotification('icon', 'cow_black')
+        message.addNotification('color', '#aeaeaf')
+        message.addNotification('sound', 'default')
+        message.addData('animal', 'cow')
+        break
+
+      case 'dog':
+        message.addNotification('title', 'Dog')
+        message.addNotification('body', 'Woof!')
+        message.addNotification('icon', 'dog_black')
+        message.addNotification('color', '#b19267')
+        message.addNotification('sound', 'default')
+        message.addData('animal', 'dog')
+        break
+
+      case 'duck':
+        message.addNotification('title', 'Duck')
+        message.addNotification('body', 'Quack!')
+        message.addNotification('icon', 'duck_black')
+        message.addNotification('color', '#bd7f00')
+        message.addNotification('sound', 'default')
+        message.addData('animal', 'duck')
+        break
+
+      case 'pig':
+        message.addNotification('title', 'Pig')
+        message.addNotification('body', 'Oink!')
+        message.addNotification('icon', 'pig_black')
+        message.addNotification('color', '#d37b93')
+        message.addNotification('sound', 'default')
+        message.addData('animal', 'pig')
+        break
+
+      default:
+        message.addNotification('title', 'Animal')
+        message.addNotification('body', 'A wild animal has appeared!')
+        message.addNotification('sound', 'default')
+        break
+    }
+    return message
+  }
+}
+
+Notifications
+  .route('fcm', '<DEVICE_TOKEN>')
+  .notify(new PushTestNotification('cat'))
+```
+
+## Channels
+
+- [adonis-fcm-notification-channel](https://github.com/enniel/adonis-fcm-notification-channel)
 
 ## Credits
 
