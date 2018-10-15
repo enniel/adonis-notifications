@@ -40,6 +40,8 @@ class NotificationSender {
     this.emitter.fire('notification.sent', {
       notifiable, notification, channel, response
     })
+
+    return response
   }
 
   formatNotifiables (notifiables) {
