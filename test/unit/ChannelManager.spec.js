@@ -316,4 +316,41 @@ test.group('ChannelManager', (group) => {
     assert.equal(notifications[2].notifiable_type, User.table)
     assert.isNull(notifications[2].read_at)
   })
+
+  test('should send on demand notification', async assert => {
+    class TestNotification {
+      via () {
+        return ['database']
+      }
+
+      toJSON () {
+        return {
+          foo: 'bar'
+        }
+      }
+    }
+    const manager = new ChannelManager(ioc)
+    manager.extend('database', () => {
+      return new DatabaseChannel()
+    })
+    const route = {
+      create: ({ id, type, data }) => {
+        return use('Database').table('notifications').insert({
+          id,
+          type,
+          data: JSON.stringify(data)
+        })
+      }
+    }
+    await manager.route('database', route).notify(new TestNotification())
+    const DatabaseNotification = use('DatabaseNotification')
+    const notifications = (await DatabaseNotification.query().fetch()).toJSON()
+
+    assert.notEqual(notifications[0].id, undefined)
+    assert.equal(notifications[0].data.foo, 'bar')
+    assert.equal(notifications[0].type, 'TestNotification')
+    assert.isNull(notifications[0].notifiable_id)
+    assert.isNull(notifications[0].notifiable_type)
+    assert.isNull(notifications[0].read_at)
+  })
 })

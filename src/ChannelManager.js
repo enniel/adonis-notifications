@@ -2,11 +2,13 @@
 
 const NE = require('node-exceptions')
 const NotificationSender = require('./NotificationSender')
+const AnonymousNotifiable = require('./AnonymousNotifiable')
 
 class ChannelManager {
   constructor (app) {
     this.app = app
     this.channels = {}
+    this.notifiable = new AnonymousNotifiable()
   }
 
   get sender () {
@@ -35,6 +37,16 @@ class ChannelManager {
 
   sendNow (notifiables, notification, channels = []) {
     return this.sender.sendNow(notifiables, notification, channels)
+  }
+
+  route (channel, data) {
+    this.notifiable.route(channel, data)
+
+    return this.notifiable
+  }
+
+  notify (notification) {
+    return this.notifiable.notify(notification)
   }
 }
 
