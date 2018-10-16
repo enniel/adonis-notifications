@@ -206,6 +206,7 @@ Notifications
 ## Channels
 
 - [adonis-fcm-notification-channel](https://github.com/enniel/adonis-fcm-notification-channel)
+- [adonis-mail-notification-channel](https://github.com/enniel/adonis-mail-notification-channel)
 
 ## Credits
 
