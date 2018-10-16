@@ -1,5 +1,7 @@
 # Adonis Notifications
 
+A provider for easy sending notifications (Inspired [Laravel Notifications](https://laravel.com/docs/5.7/notifications))
+
 [![Build Status](https://travis-ci.org/enniel/adonis-notifications.svg?branch=master)](https://travis-ci.org/enniel/adonis-notifications)
 [![Coverage Status](https://coveralls.io/repos/github/enniel/adonis-notifications/badge.svg?branch=master)](https://coveralls.io/github/enniel/adonis-notifications?branch=master)
 
