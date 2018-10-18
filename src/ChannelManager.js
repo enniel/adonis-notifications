@@ -8,11 +8,18 @@ class ChannelManager {
   constructor (app) {
     this.app = app
     this.channels = {}
-    this.notifiable = new AnonymousNotifiable()
   }
 
   get sender () {
     return new NotificationSender(this, this.app.use('Event'))
+  }
+
+  get notifiable () {
+    if (!this._notifiable) {
+      this._notifiable = new AnonymousNotifiable()
+    }
+
+    return this._notifiable
   }
 
   extend (channel, callback) {
@@ -42,11 +49,14 @@ class ChannelManager {
   route (channel, data) {
     this.notifiable.route(channel, data)
 
-    return this.notifiable
+    return this
   }
 
   notify (notification) {
-    return this.notifiable.notify(notification)
+    const notifiable = this.notifiable
+    delete this._notifiable
+
+    return notifiable.notify(notification)
   }
 }
 

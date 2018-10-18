@@ -346,6 +346,8 @@ test.group('ChannelManager', (group) => {
     const DatabaseNotification = use('DatabaseNotification')
     const notifications = (await DatabaseNotification.query().fetch()).toJSON()
 
+    assert.isUndefined(manager._notifiable)
+
     assert.notEqual(notifications[0].id, undefined)
     assert.equal(notifications[0].data.foo, 'bar')
     assert.equal(notifications[0].type, 'TestNotification')
