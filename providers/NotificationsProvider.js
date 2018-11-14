@@ -20,7 +20,9 @@ class NotificationsProvider extends ServiceProvider {
     })
     this.app.alias('Adonis/Notifications/HasDatabaseNotifications', 'HasDatabaseNotifications')
     this.app.bind('Adonis/Notifications/DatabaseNotification', () => {
-      return require('../src/DatabaseNotification')
+      const DatabaseNotification = require('../src/DatabaseNotification')
+      DatabaseNotification._bootIfNotBooted()
+      return DatabaseNotification
     })
     this.app.alias('Adonis/Notifications/DatabaseNotification', 'DatabaseNotification')
     this.app.bind('Adonis/Notifications/DatabaseMessage', () => {

@@ -25,6 +25,7 @@ test.group('Providers', (group) => {
     assert.isDefined(ioc.use('Adonis/Notifications/DatabaseNotification'))
     assert.isFalse(ioc._bindings['Adonis/Notifications/DatabaseNotification'].singleton)
     assert.equal(ioc._aliases['DatabaseNotification'], 'Adonis/Notifications/DatabaseNotification')
+    assert.isTrue(ioc.use('Adonis/Notifications/DatabaseNotification').$booted)
 
     assert.isDefined(ioc.use('Adonis/Notifications/DatabaseMessage'))
     assert.isFalse(ioc._bindings['Adonis/Notifications/DatabaseMessage'].singleton)
